@@ -1,0 +1,25 @@
+name: release-please
+
+# Conventional commits on master drive versioning automatically: fix -> patch,
+# feat -> minor, feat!/BREAKING CHANGE -> minor while pre-1.0 (bump-minor-pre-major).
+# The action opens a release PR that bumps version.txt and build.gradle in
+# lockstep and updates CHANGELOG.md; merging it tags the GitHub release
+# (vX.Y.Z). Cut 1.0.0 when ready
+# with a "Release-As: 1.0.0" commit footer.
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v4
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
