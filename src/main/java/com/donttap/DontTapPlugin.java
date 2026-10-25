@@ -4,8 +4,6 @@ import com.donttap.ui.DontTapPanel;
 import com.google.inject.Provides;
 import javax.inject.Inject;
 import net.runelite.client.config.ConfigManager;
-import net.runelite.client.eventbus.Subscribe;
-import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.ClientToolbar;
@@ -21,9 +19,6 @@ public class DontTapPlugin extends Plugin
 {
 	@Inject
 	private ClientToolbar clientToolbar;
-
-	@Inject
-	private TapSounds tapSounds;
 
 	// built in startUp: swing components created before the client installs
 	// its look and feel keep the default metal ui delegates forever
@@ -42,8 +37,6 @@ public class DontTapPlugin extends Plugin
 			.panel(panel)
 			.build();
 		clientToolbar.addNavigation(navButton);
-
-		tapSounds.reload();
 	}
 
 	@Override
@@ -53,21 +46,11 @@ public class DontTapPlugin extends Plugin
 		navButton = null;
 		panel.shutDown();
 		panel = null;
-		tapSounds.close();
 	}
 
 	@Provides
 	DontTapConfig provideConfig(ConfigManager configManager)
 	{
 		return configManager.getConfig(DontTapConfig.class);
-	}
-
-	@Subscribe
-	public void onConfigChanged(ConfigChanged event)
-	{
-		if (DontTapConfig.GROUP.equals(event.getGroup()) && "tapSounds".equals(event.getKey()))
-		{
-			tapSounds.reload();
-		}
 	}
 }
